@@ -7,7 +7,7 @@ const countdown = require("./utils/serverShutdown");
 
 
 const connectToDatabase = async () => {
-	const uri = process.env.DATABASE | process.env.DB_LOCAL;
+	const uri = process.env.DATABASE || process.env.DB_LOCAL;
 	try {
 		await mongoose.connect(uri);
 		console.log("\x1b[36mDB connected successfully!\x1b[0m");

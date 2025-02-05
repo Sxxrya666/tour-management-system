@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "start": "NODE_ENV=production nodemon server.js ",
-    "dev": "nodemon server.js",
+    "start": "SET NODE_ENV=production & nodemon server.js",
+    "dev": "SET NODE_ENV=development & nodemon server.js",
     "test": "jest",
     "debug": "ndb server.js"
   },

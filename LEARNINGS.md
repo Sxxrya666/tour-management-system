@@ -36,5 +36,5 @@
   code: undefined } 
 
 ```
-
-the fix was in .env file. CHANGE DATABASE url from mongodb://`localhost`:27017/<db_name> to mongodb://`127.0.0.1`:27017/<db_name> 
+**solution**: https://stackoverflow.com/questions/69840504/mongooseserverselectionerror-connect-econnrefused-127017 
+tl;dr-> the fix was in .env file. CHANGE DATABASE url from mongodb://`localhost`:27017/<db_name> to mongodb://`127.0.0.1`:27017/<db_name> 

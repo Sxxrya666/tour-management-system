@@ -1,0 +1,12 @@
+services:
+    mongodb:
+        volumes:
+            - type: bind
+            
+
+
+    server:
+        build: 
+            context: .
+        ports: 
+        - 8000:8000  

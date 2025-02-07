@@ -12,8 +12,9 @@ const connectToDatabase = async () => {
 		await mongoose.connect(uri);
 		console.log("\x1b[36mDB connected successfully!\x1b[0m");
 
-		const server = app.listen(8000, () => {
-			console.log("Server is running on port 8000");
+		const port = process.env.PORT; 
+		const server = app.listen(port, () => {
+			console.log(`Server is running on port ${port}`);
 		});
 
 		process.on('SIGINT', async () => {

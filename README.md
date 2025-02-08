@@ -31,11 +31,11 @@
 2. Create a `.env` file with your settings (see below)
 3. Install dependencies:
    ```
-   npm install
+   bun install
    ```
 4. Start the server:
    ```
-   npm start
+   bun start
    ```
 
 ## Environment Variables Needed
@@ -58,9 +58,9 @@ Create a `.env` file in the root folder with these settings:
 
 ## API Routes
 
-- `/api/tours`: Tour management
-- `/api/users`: User management
-- `/api/reviews`: Review management
+- `/api/v1/tours`: Tour management
+- `/api/v1/users`: User management
+- `/api/v1/reviews`: Review management
 
 ## Security Features
 

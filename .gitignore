@@ -1,3 +1,17 @@
 .env
 .vscode
+# Dependency directories
 node_modules
+.bun
+
+# Docker files
+.dockerignore
+Dockerfile
+docker-compose.yaml
+
+# Git
+.git
+.gitignore
+
+# Others
+README.md

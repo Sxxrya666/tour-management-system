@@ -66,74 +66,81 @@ const userSchema = new Schema({
     passwordChangedAt: {
         type: Date,
     },
-
-    passwordResetToken: String,
-    passwordResetExpiryTime: Date
-
+    jwtToken: {
+        type: String, 
+    },
+    passwordResetToken: {
+       type: String
+    },
+    passwordResetExpiryTime: {
+        type: Date
+    }
 
 }, { autoIndex: true, versionKey: false });
 
-
-
-// userSchema.set('toJSON', {
-//     versionKey: false
-// })
-
+userSchema.set('toJSON', {
+    versionKey: false
+})
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
 
     this.password = await bcrypt.hash(this.password, 12);
-    this.confirmPassword = undefined; // deletes this field and doesnt save in the database
+    
+    if (!this.isNew) {
+        // evicting a race condition between db write and token creation time 
+      this.passwordChangedAt = Date.now() - 1000; 
+    }
+
+    this.confirmPassword = undefined; 
     next()
 });
 
-
-
-
-//? ONLY FETCH THE ACTIVE ACCOUNTS FROM DB
+/**
+ * ONLY FETCH THE ACTIVE ACCOUNTS FROM DB
+ * */
 userSchema.pre(/^find/, function (next){
-    // show documents that have active: true
-    this.where({active: {$ne: false}})
+    this.where({active: {$eq: true}})
     next()
 })
-userSchema.methods.passChngAftToken = function (jwtPayload) {
-   return !!(this.passwordChangedAt && this.passwordChangedAt * 1000 < jwtPayload.iat)
-};
 
-// trying out instance method
-userSchema.methods.isThisPasswordCorrect = async function (candidatePassword, hashedPassword) {
-    try {
-        return await bcrypt.compare(candidatePassword, hashedPassword);
-    } catch (error) {
-        console.log('inside isThisPasswordCorrect err block ')
-        if(error) throw new Error(error)
+/**
+ *  RETURNS TRUE if the token is older (INVALID/BAD)
+ *  RETURNS FALSE if the token is newer (VALID/GOOD)
+ */
+userSchema.methods.passChngAftToken = function (jwtTimestamp) {
+     if (this.passwordChangedAt) {
+        const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+        return jwtTimestamp < changedTimestamp;
+    } else {
+        return false 
     }
+}    
+
+userSchema.methods.isThisPasswordCorrect = async function (candidatePassword, hashedPassword) {
+    const result =  await bcrypt.compare(candidatePassword, hashedPassword);
+    return result
 };
 
-//creating reset token for forgot password
+/**
+ * creating reset token for forgot password
+ * - generate a random secure token using crypto library
+ * - we will save this token to the database for security
+ * - then set an expiry time for that so that it is short-lived
+ */
 userSchema.methods.createPasswordResetToken = async function (){
 try {
     
-    //generating that token
     const resetToken = crypto.randomBytes(32).toString('hex')
-    console.log({resetToken},"this.passwordResetToken: ", this.passwordResetToken);
     
-    // we will send this token to the user 
-    // will be stored in db for security,
-    //  so that no hacker can use the stolen acc
-    //? for token string
-    this.passwordResetToken = crypto.createHash('sha-256').update(resetToken).digest('hex') //will save this to DB now (hashed token)
-    // this.passwordResetToken = resetToken
-    //? for expiry time
-    this.passwordResetExpiryTime = Date.now() + 10 * 60 * 1000
+    // hashing the token    
+    this.passwordResetToken = crypto.createHash('sha-256').update(resetToken).digest('hex') 
+    this.passwordResetExpiryTime = Date.now() + 15 * 60 * 1000
     return resetToken
 } catch (error) {
     console.log('error inside createPasswordResetToken: ', error)
+    }
 }
-}
-
 
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;

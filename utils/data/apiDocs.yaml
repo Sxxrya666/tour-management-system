@@ -1,0 +1,2088 @@
+openapi: 3.0.0
+info:
+  title: Tour Management System
+  description: >-
+    API collection for Tour Management System with comprehensive security
+    features, role-based access control, and error handling
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:22000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    noauthAuth:
+      type: http
+      scheme: noauth
+tags:
+  - name: Authentication
+  - name: User Management
+    description: Endpoints for managing user accounts with role-based access control
+  - name: Error Handling
+    description: Examples of error responses and handling
+  - name: Tours
+  - name: Reviews
+  - name: Users
+paths:
+  /api/v1/users/auth/sign-up:
+    post:
+      tags:
+        - Authentication
+      summary: Sign Up
+      description: >-
+        Create a new user account. Note: Rate limited to prevent brute force
+        attacks. Available roles: user, guide, lead-guide, admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Test User
+                email: a@example.com
+                password: test1234
+                confirmPassword: test1234
+                role: admin
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            set-cookie:
+              schema:
+                type: string
+                example: >-
+                  jwt=s%3AeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb25nb1VzZXJJZCI6IjY5MWQzOTMyOWM4ZWY1YTkwYWE5N2Q1NyIsImlhdCI6MTc2MzUyMjg2NywiZXhwIjoxNzYzNjA5MjY3fQ.vhJrVfkEth5x1aXQ1C029xXuoevL2toMyD0boJEeljA.Ztb4B8O6t%2BjnO6wzq1Yj1jevYzoPes3qhK1qX2xNZ1U;
+                  Max-Age=345600; Path=/; Expires=Sun, 23 Nov 2025 03:27:47 GMT;
+                  HttpOnly
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:27:46 GMT
+            Content-Length:
+              schema:
+                type: integer
+                example: '344'
+            ETag:
+              schema:
+                type: string
+                example: W/"158-iwEK3AtPtF5gB/Ac7/COi1brwXw"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 10;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '10'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '9'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '300'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Sign Up Successful!",
+                    "user": {
+                        "name": "Test User",
+                        "role": "user",
+                        "active": true,
+                        "email": "userr@example.com",
+                        "_id": "691d39329c8ef5a90aa97d57"
+                    },
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb25nb1VzZXJJZCI6IjY5MWQzOTMyOWM4ZWY1YTkwYWE5N2Q1NyIsImlhdCI6MTc2MzUyMjg2NywiZXhwIjoxNzYzNjA5MjY3fQ.vhJrVfkEth5x1aXQ1C029xXuoevL2toMyD0boJEeljA"
+                }
+        '409':
+          description: Conflict
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 10;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '10'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '8'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '278'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '85'
+            ETag:
+              schema:
+                type: string
+                example: W/"55-vtgaG+2yWhOOWAEAIRn4OayByg8"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:53:56 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "User already exists using this email! Please try again.",
+                    "status": "Fail"
+                }
+        '500':
+          description: Internal Server Error
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 10;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '10'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '9'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '300'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '95'
+            ETag:
+              schema:
+                type: string
+                example: W/"5f-QbqUbH9jiGZCZTw9Obe1u8fNYaE"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:53:33 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "User validation failed: confirmPassword: Passwords do not match!",
+                    "status": "error"
+                }
+  /api/v1/users/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login
+      description: Login to get JWT token and secure HTTP-only cookie. Rate limited.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: a@example.com
+                password: test1234
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 5;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '5'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '238'
+            Set-Cookie:
+              schema:
+                type: string
+                example: >-
+                  jwt=s%3AeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb25nb1VzZXJJZCI6IjY5MWQxZDAzOTE2OTFhYzRkNjMzYTY1MCIsImlhdCI6MTc2MzUyMTA5NywiZXhwIjoxNzYzNjA3NDk3fQ.mnZmz_N_PE4PYpiltE9dXeGcsa08xUlAB56KKp7DxEQ.rCKdgmLkg8EE20gXlsgDcyxWSpbD1dVqy2yUBLXvM58;
+                  Max-Age=345600; Path=/; Expires=Sun, 23 Nov 2025 02:58:17 GMT;
+                  HttpOnly; Secure
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Content-Length:
+              schema:
+                type: integer
+                example: '225'
+            ETag:
+              schema:
+                type: string
+                example: W/"e1-8ERSBsQqNw6ckexkAeDvpjvaUU4"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 02:58:17 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Login Successful!
+                token: >-
+                  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb25nb1VzZXJJZCI6IjY5MWQxZDAzOTE2OTFhYzRkNjMzYTY1MCIsImlhdCI6MTc2MzUyMTA5NywiZXhwIjoxNzYzNjA3NDk3fQ.mnZmz_N_PE4PYpiltE9dXeGcsa08xUlAB56KKp7DxEQ
+        '400':
+          description: Bad Request
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 5;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '5'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '3'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '295'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '65'
+            ETag:
+              schema:
+                type: string
+                example: W/"41-pwjF4bl3HBh7Xb/hhLfownuoR94"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:08:38 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "User does not exist! ",
+                    "status": "Client Side Error!"
+                }
+        '500':
+          description: Internal Server Error
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 5;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '5'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '2'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '269'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '88'
+            ETag:
+              schema:
+                type: string
+                example: W/"58-boegYmThRZ2uWjvteigt4+dQyZo"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:09:05 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Incorrect Email or Password! Try Again.",
+                    "status": "Internal Server Error!!"
+                }
+  /api/v1/users/update-password:
+    patch:
+      tags:
+        - Authentication
+      summary: Update Password
+      description: Update current user's password. Requires authentication.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                oldPassword: newpassword123
+                newPassword: newpassword1234
+                confirmPassword: newpassword1234
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '201':
+          description: Created
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 15;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '15'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '12'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '238'
+            Set-Cookie:
+              schema:
+                type: string
+                example: >-
+                  jwt=s%3AeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb25nb1VzZXJJZCI6IjY5MWQzOTMyOWM4ZWY1YTkwYWE5N2Q1NyIsImlhdCI6MTc2MzUyNDY3MCwiZXhwIjoxNzYzNjExMDcwfQ.xTxWsJbcJQOgp7CNTbECDoejlSF-DszS4Nkf7_l1HWo.lVXkifDd75T2SF40kVCJCKpd3vAEDXt%2FyRwiFxL91TE;
+                  Max-Age=345600; Path=/; Expires=Sun, 23 Nov 2025 03:57:50 GMT;
+                  HttpOnly; Secure
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '400'
+            ETag:
+              schema:
+                type: string
+                example: W/"190-zJgjX82kseF6Uq8+La6LNuQsad4"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:57:50 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Password Updated Successfully",
+                    "user": {
+                        "_id": "691d39329c8ef5a90aa97d57",
+                        "password": "$2a$12$FXazBkalrLc2nu7sXeV1D.LkvOpegbaO76lsEAGH15YouTMpYXzMu",
+                        "passwordChangedAt": "2025-11-19T03:57:49.578Z"
+                    },
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb25nb1VzZXJJZCI6IjY5MWQzOTMyOWM4ZWY1YTkwYWE5N2Q1NyIsImlhdCI6MTc2MzUyNDY3MCwiZXhwIjoxNzYzNjExMDcwfQ.xTxWsJbcJQOgp7CNTbECDoejlSF-DszS4Nkf7_l1HWo"
+                }
+  /api/v1/users/forgot-password:
+    post:
+      tags:
+        - Authentication
+      summary: Forgot Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: userr@example.com
+      security:
+        - bearerAuth: []
+      responses:
+        '401':
+          description: Unauthorized
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 15;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '15'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '11'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '216'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '96'
+            ETag:
+              schema:
+                type: string
+                example: W/"60-+vTBvF8hHWG/39slqp9u7Y0WRYs"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:58:10 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "User changed the password after the token was issued",
+                    "status": "Client Side Error!"
+                }
+  /api/v1/users/reset-password/{resetToken}:
+    patch:
+      tags:
+        - Authentication
+      summary: Reset Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                password: newpassword123
+                confirmPassword: newpassword123
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resetToken
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '202':
+          description: Accepted
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 15;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '15'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '13'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '236'
+            Set-Cookie:
+              schema:
+                type: string
+                example: >-
+                  jwt=s%3AeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb25nb1VzZXJJZCI6IjY5MWQzOTMyOWM4ZWY1YTkwYWE5N2Q1NyIsImlhdCI6MTc2MzUyNDI3NiwiZXhwIjoxNzYzNjEwNjc2fQ.wqwrRFv83IIjsuIdj2Ur-LEiVmzfNJNRl7E1-6qvP8E.s4Axq%2B36xPqngQZXnUik5kd%2FS3UJhwqZpjK8G4pImJ8;
+                  Max-Age=345600; Path=/; Expires=Sun, 23 Nov 2025 03:51:24 GMT;
+                  HttpOnly; Secure
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '624'
+            ETag:
+              schema:
+                type: string
+                example: W/"270-jutJk1Jzjl7Wypu/ixwPb6yi/Ac"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:51:24 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Password Updated using reset mechanism Successfully",
+                    "user": {
+                        "_id": "691d39329c8ef5a90aa97d57",
+                        "name": "Test User",
+                        "role": "user",
+                        "email": "userr@example.com",
+                        "passwordResetExpiryTime": "2025-11-19T04:05:11.674Z",
+                        "passwordResetToken": "a87ca4bd1ed28149e901d2c91f53776f408a62aa9ad4701c71cbbf4eb01d7287",
+                        "password": "$2a$12$50t1H8ozoQWbDPpi8.D1u.1Vp3VejVCSTuRr.JoDBo274LBk5U7xW",
+                        "passwordChangedAt": "2025-11-19T03:51:21.073Z"
+                    },
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb25nb1VzZXJJZCI6IjY5MWQzOTMyOWM4ZWY1YTkwYWE5N2Q1NyIsImlhdCI6MTc2MzUyNDI3NiwiZXhwIjoxNzYzNjEwNjc2fQ.wqwrRFv83IIjsuIdj2Ur-LEiVmzfNJNRl7E1-6qvP8E"
+                }
+        '400':
+          description: Bad Request
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 15;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '15'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '9'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '39'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '78'
+            ETag:
+              schema:
+                type: string
+                example: W/"4e-w8+XOYWsJEVzVF8/lvzKm0nZT3k"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:54:33 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Passwords do not match! Try again.",
+                    "status": "Client Side Error!"
+                }
+        '401':
+          description: Unauthorized
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 15;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '15'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '8'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '10'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '92'
+            ETag:
+              schema:
+                type: string
+                example: W/"5c-WT82/Js0Nn7PTTu2APcOuKvorqo"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:55:01 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "No token found. Login is unsuccessful, try again",
+                    "status": "Client Side Error!"
+                }
+  /api/v1/users/me:
+    get:
+      tags:
+        - Users
+      summary: Get Current User
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users/update-credentials:
+    patch:
+      tags:
+        - Users
+      summary: Update Current User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                role: admin
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '202':
+          description: Accepted
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 05:36:44 GMT
+            Content-Length:
+              schema:
+                type: integer
+                example: '206'
+            ETag:
+              schema:
+                type: string
+                example: W/"ce-L/es6N26BZcI2h+JOBY06fqlN3k"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 15;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '15'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '14'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '300'
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "status": "success",
+                    "updatedUserObj": {
+                        "user": {
+                            "_id": "691d38d86488ecafb6004a8c",
+                            "name": "updated name",
+                            "role": "user",
+                            "email": "user@example.com",
+                            "photo": "https://example.com/image.png"
+                        }
+                    },
+                    "position": "updateMe"
+                }
+  /api/v1/users/delete-account:
+    delete:
+      tags:
+        - Users
+      summary: Delete Current User
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/non-existent-route:
+    get:
+      tags:
+        - Error Handling
+      summary: 404 Not Found
+      description: Example of 404 error response
+      responses:
+        '404':
+          description: Not Found
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 15;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '15'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '14'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '300'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '98'
+            ETag:
+              schema:
+                type: string
+                example: W/"62-hf8HmtdPhyZzm5gQsKyevey5fGQ"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:56:46 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "Cannot find /api/v1/non-existent-route on this server!",
+                    "status": "Client Side Error!"
+                }
+  /api/v1/tours/123:
+    delete:
+      tags:
+        - Error Handling
+      summary: 403 Forbidden
+      description: Example of 403 error when user lacks required role
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '403':
+          description: Forbidden
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 15;w=300
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '15'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '13'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '278'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '86'
+            ETag:
+              schema:
+                type: string
+                example: W/"56-d+p6GQCjpvXN/hv836zCzWdKfQo"
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Nov 2025 03:57:08 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |-
+                {
+                    "message": "You are not allowed to perform this action",
+                    "status": "Client Side Error!"
+                }
+  /api/v1/tours:
+    get:
+      tags:
+        - Tours
+      summary: Get All Tours
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Tours
+      summary: Create Tour/Tours
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: he Forest H453ikdsadfasdff
+                duration: 5
+                difficulty: easy
+                price: 3.4523452435234233e+43
+                discountPrice: 397
+                summary: Breathtaking hike through the Canadian forest.
+                description: >-
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+                  irure dolor in reprehenderit in voluptate velit esse cillum
+                  dolore eu fugiat nulla pariatur.
+                imageCover: tour-forest-cover.jpg
+                images:
+                  - tour-forest-1.jpg
+                  - tour-forest-2.jpg
+                  - tour-forest-3.jpg
+                startDates:
+                  - '2025-06-25T09:00:00.000Z'
+                  - '2025-07-20T09:00:00.000Z'
+                  - '2025-10-05T09:00:00.000Z'
+                startLocation:
+                  type: Point
+                  coordinates:
+                    - -115.570154
+                    - 51.178456
+                  address: Banff National Park, Canada
+                  description: Meeting point at the Banff Hotel lobby
+                locations:
+                  - type: Point
+                    coordinates:
+                      - -115.570154
+                      - 51.178456
+                    address: Banff National Park, Canada
+                    description: Day 1 trek start
+                    day: 1
+                  - type: Point
+                    coordinates:
+                      - -115.927691
+                      - 51.257485
+                    address: Vermilion Lakes
+                    description: Lunch break and photo session
+                    day: 2
+                guides:
+                  - 5c8a1d5b0190b214360dc057
+                  - 5c8a1dfa2f8fb814b56fa181
+                VIPtours: false
+                noOfGroups: 3
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/tours/6921f3ff23471f7a49bb5114:
+    get:
+      tags:
+        - Tours
+      summary: Get Tour
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - Tours
+      summary: Update Tour
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: MADARCHOD
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Tours
+      summary: Delete Tour
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/tours/tour-stats:
+    get:
+      tags:
+        - Tours
+      summary: Get Tour Stats
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/tours/get-monthly/2025:
+    get:
+      tags:
+        - Tours
+      summary: Get Monthly Plan
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/tours/tour-within-radius/distance/234/position/51.178456,-115.570154/unit/32:
+    get:
+      tags:
+        - Tours
+      summary: Get Tours Within Radius
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Get All Reviews
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Reviews
+      summary: Create Review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                review: Great tour!
+                rating: 5
+                tourId: tour-id-here
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/reviews/{}:
+    patch:
+      tags:
+        - Reviews
+      summary: Update Review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                review: Updated review text
+                rating: 4
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/reviews/{id}:
+    delete:
+      tags:
+        - Reviews
+      summary: Delete Review
+      parameters:
+        - name: Authorization
+          in: header
+          schema:
+            type: string
+          example: Bearer {{jwt_token}}
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users:
+    get:
+      tags:
+        - Users
+      summary: Get All Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /:
+    get:
+      tags:
+        - default
+      summary: Home
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}

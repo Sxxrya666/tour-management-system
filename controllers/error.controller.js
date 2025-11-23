@@ -12,9 +12,9 @@ const handleCastErrorMongoDB = (err) => {
 };
 
 const handleJWTErrorMongoDB = () => {
-  const invalidSignxture = 'Token Signture Invalid, Please try again!'
+  const invalidSignature = 'Token Signture Invalid, Please try again!'
   const newError = new AppError()
-  newError.message = invalidSignxture
+  newError.message = invalidSignature
   newError.isOperational = true
   newError.status = 'fail'
   newError.statusCode = 401
@@ -22,18 +22,27 @@ const handleJWTErrorMongoDB = () => {
 }
 
 const handleTokenExpiryError = () =>{
-  const expToken = 'Token Expired. Logging out!'
+  const message = 'Token Expired. Logging out!'
   const newError = new AppError()
-  newError.message = expToken
+  newError.message = message 
   newError.isOperational = true
   newError.status = 'fail'
   newError.statusCode = 401
   return newError
 }
 
+const handleDuplicateKeyError = (err) => {
+  const message = 'User already exists using this email! Please try again.' 
+  const newError = new AppError(); 
+  newError.message = message; 
+  newError.isOperational = true
+  newError.status = 'Fail'; 
+  newError.statusCode = 409; 
+  return newError;  
+}
 
 const sendDevelopmentErrors = (err, res) => {
-  res.status(err.statusCode).json({
+  return res.status(err.statusCode).json({
     error_name: err.name,
     error_msg: err.message, 
     err_path: err.path,
@@ -52,32 +61,17 @@ const sendProductionErrors = (err, res) => {
       message: err.message,
       status: err.status
     });
-  // if (err.isOperational) {
-  //   res.status(err.statusCode).json({
-  //     message: err.message,
-  //     status: err.status
-  //   });
-  // } else {
-  //   console.error('Error from non-opertionl section: ', err);
-  //   res.status(500).json({
-  //     message: 'something went very wrong',
-  //     status: 'fail'
-  //   });
-  // }
 };
 
 //! MAIN MIDDLEWARE
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
+  
 
-  // SENDING ERROR MSGES ACC TO DEV ENV
-  if (process.env.NODE_ENV === 'development') {
-    console.log('executing sendDevelopmentErrors()')
-    sendDevelopmentErrors(err, res);
-  } else if (process.env.NODE_ENV === 'production') {
-    let error = err // *avoiding direct mutation (shallow copy)
-    
+  function handleDBerrorTypes(err){
+    let error = err 
+
     if (error.name === 'CastError') {
       error = handleCastErrorMongoDB(error)
     }
@@ -87,9 +81,21 @@ module.exports = (err, req, res, next) => {
     else if(error.name === 'TokenExpiredError'){
       error = handleTokenExpiryError();
     }
-
-    console.log('executing sendDevelopmentErrors()')
-    sendProductionErrors(error, res);
+    else if(error.message.includes("duplicate key") && error.code === 11000){
+      error = handleDuplicateKeyError(err); 
+    }
+    return error 
   }
-  next(err); // Forward the error to the next middleware
+  if (process.env.NODE_ENV === "development") { 
+    console.log('Firing Development Error Handler!')
+    let errorType = handleDBerrorTypes(err); 
+    sendDevelopmentErrors(errorType, res);
+
+  } else if (process.env.NODE_ENV === "production") {
+    console.log('Firing Development Error Handler!')
+      let errorType = handleDBerrorTypes(err); 
+      sendProductionErrors(errorType, res); 
+    }
+
+  next(err); 
 };

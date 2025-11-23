@@ -1,7 +1,7 @@
 const User = require('../models/userModel')
 const catchErrorsInEveryRoute = require('../utils/catchErrorsInEveryRoute');
-const AppError = require('../utils/AppError');
 const factory = require("./factoryCreate")
+const AppError = require('../utils/AppError')
 
 
 const getAllusers = factory.getAll(User)
@@ -12,8 +12,6 @@ const getMyDetailsWithoutID = (req, res, next) => {
   req.params.id = req.user.id
   next()
 }
-
-
 
 const updateMe = catchErrorsInEveryRoute (async(req, res, next)=>{
 
@@ -29,10 +27,9 @@ const updateMe = catchErrorsInEveryRoute (async(req, res, next)=>{
   }
 
   const options = {new: true, runValidators: true}
+  
   //get userID from db
-  const user = await Users.findByIdAndUpdate(req.user.id, filteredReqBody(req.body, 'name','email'), options)
-
-
+  const user = await User.findByIdAndUpdate(req.user.id, filteredReqBody(req.body, 'name', 'email', 'photo'), options)
 
   // send the entire object
   res.status(202).json({
@@ -42,6 +39,7 @@ const updateMe = catchErrorsInEveryRoute (async(req, res, next)=>{
     },
     position: 'updateMe'
   })
+  next()
 })
 
 // we will NOT delete the user Acc, instead `deactivate` it

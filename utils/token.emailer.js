@@ -3,25 +3,22 @@ require('dotenv').config();
 
 const sendEmail = async (options) => {
     try {
-        //TODO:  1) create transporter
         const transporter = nodemailer.createTransport({
-            host: process.env.HOST,
-            port: process.env.NODEMAILER_PORT,
+            host: process.env.SMTP_HOST,
+            port: parseInt(process.env.SMTP_PORT, 10),
             auth: {
-                user: '64c66c9ba3d6df',
-                pass: '27de75132dcaaa'
+                user: process.env.SMTP_USERNAME, 
+                pass: process.env.SMTP_PASSWORD
             }
         });
 
-        //TODO:  2) set options
         const mailOptions = {
-            from: `SauceBxss <niga@testmail.com>`,
+            from: `Yatrify Tours <yatri@yatrify.com>`,
             to: options.email,
             subject: options.subject,
             text: options.message
         };
 
-        //TODO: 3) send email
         await transporter.sendMail(mailOptions);
     } catch (error) {
         console.error(error);

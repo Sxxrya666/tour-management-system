@@ -1,5 +1,4 @@
 const Tour = require("../models/tourModel");
-
 const catchErrorsInEveryRoute = require("../utils/catchErrorsInEveryRoute");
 const factory = require("./factoryCreate")
 
@@ -48,7 +47,6 @@ const getTourStats = catchErrorsInEveryRoute (async (req, res,next) => {
 			// 	$match: { _id: { $ne: "EASY" } },
 			// },
 		]);
-		// console.log(stats);
 
 		return res.status(200).json({
 			results: stats.length,
@@ -103,7 +101,6 @@ const getMonthlyPlan = catchErrorsInEveryRoute(async (req, res,next) => {
 			$limit: 5,
 		},
 	]);
-
 	console.log("Aggregated Plan: ", plan);
 
 	return res.status(200).json({
@@ -112,11 +109,7 @@ const getMonthlyPlan = catchErrorsInEveryRoute(async (req, res,next) => {
 		status: "success",
 	});
 });
-
-
 const fetchTourWithinRadius = catchErrorsInEveryRoute(async (req, res ,next)=>{
-
-
 	//get all the params
 	const {distance, lonlat, unit} = req.params;
 	console.log(distance, lonlat, unit);
@@ -126,7 +119,7 @@ const fetchTourWithinRadius = catchErrorsInEveryRoute(async (req, res ,next)=>{
 	if(!(distance && lonlat && unit)) return next(new AppError("Please specify distance, location and unit!"))
 
 	// fetch the tours then filter with geospatial query
-	 const radius = parseInt(distance, 10)/3963.2
+	const radius = parseInt(distance, 10)/3963.2
 	const query = {
 		startLocation: {
 			$geoWithin: {

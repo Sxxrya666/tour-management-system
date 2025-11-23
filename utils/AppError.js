@@ -2,10 +2,10 @@ class AppError extends Error {
   constructor(message, statusCode) {
     super(message);
     this.statusCode = statusCode;
-    this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
+    this.status = `${statusCode}`.startsWith('4') ? 'Client Side Error!' : 'Internal Server Error!';
     this.isOperational = true;
     Error.captureStackTrace(this, this.constructor);
-    Error.stackTraceLimit = 7
+    Error.stackTraceLimit = 7 
   }
 }
 

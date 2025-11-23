@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 const slugify = require("slugify");
-const Review = require("../models/reviewModel");
 
 const toursSchema = new Schema(
   {
@@ -11,7 +10,7 @@ const toursSchema = new Schema(
       required: [true, "tour name is a required field"],
       unique: true,
       minLength: [4, "tour name must have a minimum of 4 characters"],
-      maxLength: [30, "name must have a maximum of 30 characters"],
+      maxLength: [100, "name must have a maximum of {maxLength} characters"],
     },
     urlSlug: String,
     rating: {
@@ -115,6 +114,7 @@ const toursSchema = new Schema(
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    timestamps: true
   }
 );
 

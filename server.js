@@ -1,24 +1,26 @@
 const dotenv = require("dotenv");
-dotenv.config({ path: "./env" });
+dotenv.config({"path": ".env"})
 const mongoose = require("mongoose");
 const process = require("process");
 const app = require("./app");
-const countdown = require("./utils/serverShutdown");
+const logger = require("./utils/logger")
+
 
 
 const connectToDatabase = async () => {
-	const uri = process.env.DATABASE || process.env.DB_LOCAL;
+	const uri = process.env.DB_REMOTE || process.env.DB_LOCAL;
 	try {
 		await mongoose.connect(uri);
-		console.log("\x1b[36mDB connected successfully!\x1b[0m");
+		console.info("DB connected successfully!")
 
-		const port = process.env.PORT; 
+		const port = process.env.PORT;
 		const server = app.listen(port, () => {
-			console.log(`Server is running on port ${port}`);
+			console.info(`Server is running on port ${port}`)
+			console.info(`URL: \x1b[4mhttp://127.0.0.1:${port}\x1b[0`);
 		});
 
 		process.on('SIGINT', async () => {
-			console.log("Command received, shutting down! " )
+			console.warn("Command received, shutting down!")
 			await server.close();
 			await mongoose.connection.close(), 
 
@@ -34,12 +36,10 @@ const connectToDatabase = async () => {
 connectToDatabase();
 
 process.on('unhandledRejection', (err) => {
-	console.log('inside unhandledRejection: ');
 	console.error(err.name, err.message);
 });
 
 process.on('uncaughtException', (err) => {
-	console.error('inside uncaughtException: ', err);
 	console.log("shutting down server");
     process.exit(0);
 })

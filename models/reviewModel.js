@@ -7,7 +7,7 @@ const reviewSchema = new Schema(
 			type: Number,
 			required: true,
 			min: 1,
-			max: 5,
+			max: 10,
 		},
 		createdAt: {
 			type: Date,
@@ -20,13 +20,10 @@ const reviewSchema = new Schema(
 		tour: {
 			type: Schema.Types.ObjectId,
 			ref: "Tour",
-			// required: [true, "User document cannot cannot be empty"]
 		},
 		reviewer: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			// required: [true, "User document cannot cannot be empty"],
-			// unique: true
 		},
 	},
 	{
@@ -45,8 +42,6 @@ reviewSchema.pre(/^find/, function (next) {
 	next();
 });
 
-//function for aggregating the entire model for calculating ratingCount and ratingAvg
-//making static method for this for targetting entire model
 reviewSchema.statics.getAvgRatingAndCount = async function (tourId) {
   try {
     const modelAvgStats = await this.aggregate([
@@ -61,7 +56,6 @@ reviewSchema.statics.getAvgRatingAndCount = async function (tourId) {
         }
       }
     ]);
-	console.log(modelAvgStats)
     if (modelAvgStats.length > 0) {
       const updatedTour = await this.model('Tour').findByIdAndUpdate(
         tourId,
@@ -90,27 +84,17 @@ reviewSchema.post('save', async function () {
   console.log(res.ratingsAverage, res.ratingsCount)
 });
 
-
-//for findoneanddelete and findoneandupdate, we wont get to do ggregte properly
-
 reviewSchema.pre(/^findOneAnd/,async function(next){
-	console.log('inside findoneand middleware hook')
-	//this 'this.resDoc' is just custom prop to pass data to next chained middlware
 	this.resDoc = await this.findOne().clone()
 	next()
 })
 
 reviewSchema.post(/^findOneAnd/, async function() {
-	console.log('inside post findone hook!!!!')
 	if(this.resDoc){
 		const res = await this.resDoc.getAvgRatingAndCount(this.resDoc.tour)
-		console.log({res})
 	}
-	console.log('outside post findone hook!!!!')
 });
 
-
-//creating compound indexes for keeping the review to be unique for each user to review only once
 reviewSchema.index({user:1, tour: 1}, {unique: true})
 
 const Review = mongoose.model("Review", reviewSchema);

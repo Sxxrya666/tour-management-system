@@ -22,7 +22,8 @@
 
 - Node.js
 - Express.js
-- MongoDB (Database)
+- MongoDB 
+- Docker
 - Various security packages (helmet, hpp, etc.)
 
 ## How to Use
@@ -31,20 +32,13 @@
 2. Create a `.env` file with your settings (see below)
 3. Install dependencies:
    ```
-   npm install
+   bun install
    ```
 4. Start the server:
    ```
-   npm start
+   bun start # for production
+   bun run dev # for development 
    ```
-
-## Environment Variables Needed
-
-Create a `.env` file in the root folder with these settings:
-- `NODE_ENV`: development or production
-- `DATABASE`: Your MongoDB connection string
-- `JWT_SECRET`: Your secret key for tokens
-- `JWT_EXPIRES_IN`: Token expiry time
 
 ## Project Structure
 
@@ -56,11 +50,11 @@ Create a `.env` file in the root folder with these settings:
 - `public/`: Static files
 - `test/`: Test files [TBA]
 
-## API Routes
+## Core API Routes
 
-- `/api/tours`: Tour management
-- `/api/users`: User management
-- `/api/reviews`: Review management
+- `/api/v1/tours`: Tour management
+- `/api/v1/users`: User management
+- `/api/v1/reviews`: Review management
 
 ## Security Features
 

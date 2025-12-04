@@ -1,16 +1,24 @@
-pipeline {
-    agent any
+pipeline { 
+    agent any 
+
     stages { 
-        stage("building") { 
-            echo "building nigga"
+        stage('Init') { 
+            steps { 
+                echo 'checking shit'
+                sh 'bun -v'
+            }
         }
-        stage("testing") { 
-            echo "testing nigga"
-
+        stage('Testing') {
+            steps {
+                echo "testing this shit"
+                sh 'bun test'
+            }
         }
-        stage("runnding") { 
-            echo "ranning nigga"
 
+        stage('Building') {
+            steps {
+                echo "building it out nigga..."
+            }
         }
     }
 }
